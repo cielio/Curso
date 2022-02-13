@@ -1,8 +1,11 @@
 ﻿
-using Curso.api.Filters;
-using Curso.api.Models;
-using Curso.api.Models.Usuarios;
+using cursos.api.Business.Entities;
+using cursos.api.Filters;
+using cursos.api.Infrastruture.Data;
+using cursos.api.Models;
+using cursos.api.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -11,7 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace Curso.api.Controllers
+namespace cursos.api.Controllers
 {
     /// <summary>
     /// Este serviço permite autenticar um usuario cadastrado e ativo.
@@ -65,8 +68,9 @@ namespace Curso.api.Controllers
         [HttpPost]
         [Route("registrar")]
         [ValidaçaoModelStateCustomizado]
-        public IActionResult Logar(RegistroViewModelInput registroViewModelInput)
+        public IActionResult Registrar(RegistroViewModelInput registroViewModelInput)
         {
+
             return Created("",registroViewModelInput);
         }
     }

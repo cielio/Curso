@@ -1,10 +1,10 @@
-﻿using Curso.api.Models.Cursos;
+﻿using cursos.api.Models.Cursos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
 
-namespace Curso.api.Controllers
+namespace cursos.api.Controllers
 {
     [Route("api/v1/cursos")]
     [ApiController]

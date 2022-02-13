@@ -1,0 +1,25 @@
+﻿using cursos.api.Business.Entities;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace cursos.api.Infrastruture.Data.Mappings
+{
+    public class CursoMaping : IEntityTypeConfiguration<Cursos>
+    {
+        public void Configure(EntityTypeBuilder<Cursos> builder)
+        {
+            builder.ToTable("TB_CURSO");
+            builder.HasKey(p => p.Codigo);
+            builder.Property(p => p.Codigo).ValueGeneratedOnAdd();
+            builder.Property(p => p.Nome);
+            builder.Property(p => p.Descricao);
+            builder.HasOne(p => p.Usuario)
+                .WithMany().HasForeignKey(fk => fk.CodigoUsuario);
+        }
+    }
+}

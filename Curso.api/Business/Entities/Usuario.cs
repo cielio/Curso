@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cursos.api.Models.Usuarios
+namespace cursos.api.Business.Entities
 {
-    public class UsuarioViewModelOutput
+    public class Usuario
     {
         public int Codigo { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
+        public string Senha { get; set; }
     }
 }

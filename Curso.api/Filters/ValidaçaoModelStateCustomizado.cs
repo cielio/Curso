@@ -1,4 +1,4 @@
-﻿using Curso.api.Models;
+﻿using cursos.api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Curso.api.Filters
+namespace cursos.api.Filters
 {
     public class ValidaçaoModelStateCustomizado : ActionFilterAttribute
     {

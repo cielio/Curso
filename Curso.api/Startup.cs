@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Curso.api
+namespace cursos.api
 {
     public class Startup
     {

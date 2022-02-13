@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Curso.api.Models.Usuarios
+namespace cursos.api.Models.Usuarios
 {
     public class LoginViewModelInput
     {

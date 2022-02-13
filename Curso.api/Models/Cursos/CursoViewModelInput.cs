@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Curso.api.Models.Cursos
+namespace cursos.api.Models.Cursos
 {
     public class CursoViewModelInput
     {
