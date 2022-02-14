@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace cursos.api.Business.Entities
 {
-    public class Cursos
+    public class Curso
     {
         public int Codigo { get; set; }
         public string Nome { get; set; }

@@ -23,6 +23,6 @@ namespace cursos.api.Infrastruture.Data
         }
 
         public DbSet<Usuario> Usuario { get; set; }
-        public DbSet<Cursos> Curso { get; set; }
+        public DbSet<Curso> Curso { get; set; }
     }
 }

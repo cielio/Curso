@@ -1,7 +1,13 @@
-﻿using cursos.api.Models.Cursos;
+﻿using curso.api.Business.Repositories;
+using cursos.api.Business.Entities;
+using cursos.api.Models.Cursos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace cursos.api.Controllers
@@ -11,6 +17,18 @@ namespace cursos.api.Controllers
     [Authorize]
     public class CursoController : Controller
     {
+        private readonly ICursoRepository _cursoRepository;
+        private readonly ILogger<UsuarioController> _logger;
+
+        public CursoController(ICursoRepository cursoRepository, ILogger<UsuarioController> logger)
+        {
+            _cursoRepository = cursoRepository;
+            _logger = logger;
+        }
+
+
+
+
         /// <summary>
         /// Este serviço permite cadastrar curso para o usuário autenticado.
         /// </summary>
@@ -20,9 +38,32 @@ namespace cursos.api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CursoViewModelInput cursoViewModelInput)
         {
+            try
+            {
+                Curso curso = new Curso
+                {
+                    Nome = cursoViewModelInput.Nome,
+                    Descricao = cursoViewModelInput.Descricao
+                };
 
+                var codigoUsuario = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+                curso.CodigoUsuario = codigoUsuario;
+                _cursoRepository.Adicionar(curso);
+                _cursoRepository.Commit();
 
-            return Created("", cursoViewModelInput);
+                var cursoViewModelOutput = new CursoViewModelOutput
+                {
+                    Nome = curso.Nome,
+                    Descricao = curso.Descricao,
+                };
+
+                return Created("", cursoViewModelOutput);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return new StatusCodeResult(500);
+            }
         }
 
         /// <summary>
@@ -34,7 +75,24 @@ namespace cursos.api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok();
+            try
+            {
+                var codigoUsuario = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
+                var cursos = _cursoRepository.ObterPorUsuario(codigoUsuario)
+                    .Select(s => new CursoViewModelOutput()
+                    {
+                        Nome = s.Nome,
+                        Descricao = s.Descricao
+                    });
+
+                return Ok(cursos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return new StatusCodeResult(500);
+            }
         }
     }
 }

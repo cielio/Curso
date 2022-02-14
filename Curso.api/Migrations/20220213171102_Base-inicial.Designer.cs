@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cursos.api.Infrastruture.Data;
 
-namespace Curso.api.Migrations
+namespace curso.api.Migrations
 {
     [DbContext(typeof(CursoDbContext))]
     [Migration("20220213171102_Base-inicial")]

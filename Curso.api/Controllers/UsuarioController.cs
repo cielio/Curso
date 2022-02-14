@@ -1,4 +1,6 @@
 ﻿
+using curso.api.Business.Repositories;
+using curso.api.Configurations;
 using cursos.api.Business.Entities;
 using cursos.api.Filters;
 using cursos.api.Infrastruture.Data;
@@ -6,6 +8,8 @@ using cursos.api.Models;
 using cursos.api.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -29,40 +33,58 @@ namespace cursos.api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<UsuarioController> _logger;
+
+        public UsuarioController(IUsuarioRepository usuarioRepository, 
+            IAuthenticationService authenticationService, 
+            ILogger<UsuarioController> logger)
+        {
+            _usuarioRepository = usuarioRepository;
+            _authenticationService = authenticationService;
+            _logger = logger;
+        }
+
         [HttpPost]
         [Route("logar")]
         [ValidaçaoModelStateCustomizado]
         public IActionResult Logar(LoginViewModelInput loginViewModelInput)
         {
-            var usuarioViewModelOutput = new UsuarioViewModelOutput
+            try
             {
-                Codigo = 1,
-                Login = "cielio",
-                Email = "cielion@gmail.com"
-            };
+                var usuario =  _usuarioRepository.ObterUsuario(loginViewModelInput.Login);
 
-            var secret = Encoding.ASCII.GetBytes("MzfsT&d9gprP>!9$Es(X!5g@;ef!5sbk:jH\\2.}8ZP'qY#7");
-            var symemtricSecurityKey = new SymmetricSecurityKey(secret);
-            var securityTokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                if (usuario == null)
                 {
-                    new Claim(ClaimTypes.NameIdentifier, usuarioViewModelOutput.Codigo.ToString()),
-                    new Claim(ClaimTypes.Name, usuarioViewModelOutput.Login),
-                    new Claim(ClaimTypes.Email, usuarioViewModelOutput.Email),
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(symemtricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
-            };
-            var jwtSecurityTokemHandler = new JwtSecurityTokenHandler();
-            var tokenGenerated = jwtSecurityTokemHandler.CreateToken(securityTokenDescriptor);
-            var token = jwtSecurityTokemHandler.WriteToken(tokenGenerated);
+                    return BadRequest("Houve um erro ao tentar acessar.");
+                }
 
-            return Ok(new
+                //if (usuario.Senha != loginViewModel.Senha.GerarSenhaCriptografada())
+                //{
+                //    return BadRequest("Houve um erro ao tentar acessar.");
+                //}
+
+                var usuarioViewModelOutput = new UsuarioViewModelOutput()
+                {
+                    Codigo = usuario.Codigo,
+                    Login = loginViewModelInput.Login,
+                    Email = usuario.Email
+                };
+
+                var token = _authenticationService.GerarToken(usuarioViewModelOutput);
+
+                return Ok(new LoginViewModelOutput
+                {
+                    Token = token,
+                    Usuario = usuarioViewModelOutput
+                });
+            }
+            catch (Exception ex)
             {
-                Token = token,
-                Usuario = usuarioViewModelOutput.Login
-            }); 
+               // _logger.LogError(ex.ToString());
+                return new StatusCodeResult(500);
+            }
         }
 
         [HttpPost]
@@ -71,6 +93,12 @@ namespace cursos.api.Controllers
         public IActionResult Registrar(RegistroViewModelInput registroViewModelInput)
         {
 
+            var usuario = new Usuario();
+            usuario.Login = registroViewModelInput.Login;
+            usuario.Senha = registroViewModelInput.Senha;
+            usuario.Email = registroViewModelInput.Email;
+            _usuarioRepository.Adicionar(usuario);
+            _usuarioRepository.Commit();
             return Created("",registroViewModelInput);
         }
     }

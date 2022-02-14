@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Curso.api.Migrations
+namespace curso.api.Migrations
 {
     public partial class Baseinicial : Migration
     {

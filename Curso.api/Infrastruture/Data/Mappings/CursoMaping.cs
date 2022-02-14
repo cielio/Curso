@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace cursos.api.Infrastruture.Data.Mappings
 {
-    public class CursoMaping : IEntityTypeConfiguration<Cursos>
+    public class CursoMaping : IEntityTypeConfiguration<Curso>
     {
-        public void Configure(EntityTypeBuilder<Cursos> builder)
+        public void Configure(EntityTypeBuilder<Curso> builder)
         {
             builder.ToTable("TB_CURSO");
             builder.HasKey(p => p.Codigo);

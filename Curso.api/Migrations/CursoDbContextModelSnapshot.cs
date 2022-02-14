@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cursos.api.Infrastruture.Data;
 
-namespace Curso.api.Migrations
+namespace curso.api.Migrations
 {
     [DbContext(typeof(CursoDbContext))]
     partial class CursoDbContextModelSnapshot : ModelSnapshot

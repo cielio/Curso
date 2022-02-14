@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using cursos.api.Infrastruture.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-namespace Curso.api.Configurations
+namespace curso.api.Configurations
 {
     public class DbFactoryDbcontext : IDesignTimeDbContextFactory<CursoDbContext>
     {
